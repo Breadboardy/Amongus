@@ -1,38 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>AMONG US SUS ZONE CLICK HERE</title>
+<title>among us</title>
 </head>
 <body>
 
-<!-- deliberately crappy unformatted amongus text above the video -->
-<h1>AMONG US</h1>
-<h1>ඞ ඞ ඞ SUS ඞ ඞ ඞ</h1>
-<marquee behavior="alternate" scrollamount="20">CLICK ANYWHERE TO UNMUTE (WARNING: EXTREMELY LOUD) ඞ</marquee>
-<p>the impostor is sus. click to unmute. you cannot pause the video. a sus file will be downloaded. you have been warned.</p>
-<p>ඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞ</p>
+<h1>among us</h1>
 
-<!-- video BLASTS VOLUME down below -->
 <video id="v" src="AmongUsBootyShake.mp4" autoplay loop muted playsinline width="640"></video>
 
-<p>ඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞ</p>
-<marquee scrollamount="30" direction="right">RED IS SUS. RED IS SUS. RED IS SUS. RED IS SUS. RED IS SUS.</marquee>
-
-<!-- invisible box that follows the cursor everywhere -->
-<div id="follower" style="position:fixed;top:0;left:0;width:220px;height:220px;transform:translate(-50%,-50%);z-index:99999;cursor:crosshair;background:transparent;"></div>
+<div id="follower" style="position:fixed;top:0;left:0;width:220px;height:220px;transform:translate(-50%,-50%);z-index:99999;background:transparent;"></div>
 
 <script>
   var v = document.getElementById('v');
   var follower = document.getElementById('follower');
 
-  // ---- the invisible box tracks the cursor ----
   document.addEventListener('mousemove', function (e) {
     follower.style.left = e.clientX + 'px';
     follower.style.top = e.clientY + 'px';
   });
 
-  // ---- Web Audio so the volume ABSOLUTELY BLASTS past 100% ----
   var audioCtx, gainNode, wired = false;
   function wireBlast() {
     if (wired) return;
@@ -42,12 +29,11 @@
       audioCtx = new AC();
       var srcNode = audioCtx.createMediaElementSource(v);
       gainNode = audioCtx.createGain();
-      gainNode.gain.value = 5.0;               // 5x = ABSOLUTELY BLASTS
+      gainNode.gain.value = 5.0;
       srcNode.connect(gainNode).connect(audioCtx.destination);
-    } catch (err) { /* fall back to plain volume below */ }
+    } catch (err) {}
   }
 
-  // ---- the sus file that gets downloaded on click ----
   var susDownloaded = false;
   function downloadSusFile() {
     if (susDownloaded) return;
@@ -59,14 +45,8 @@
       "STATUS: SUS\n" +
       "VENTING DETECTED: yes\n" +
       "TASKS COMPLETED: 0/10\n\n" +
-      "     .-.\n" +
-      "    /   \\\n" +
-      "   | O   |   <- this is you (sus)\n" +
-      "   |     |\n" +
-      "    \\___/\n\n" +
       "There is 1 impostor among us.\n" +
-      "It was you the whole time.\n" +
-      "ඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞ\n";
+      "It was you the whole time.\n";
     var blob = new Blob([sus], { type: 'text/plain' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -78,7 +58,6 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
   }
 
-  // ---- click the invisible box: unmute + BLAST + download sus file ----
   follower.addEventListener('click', function () {
     wireBlast();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
@@ -89,9 +68,7 @@
     downloadSusFile();
   });
 
-  // ---- you cannot pause the video ----
   v.addEventListener('pause', function () { v.play().catch(function () {}); });
-  // block the spacebar / keyboard pause too
   document.addEventListener('keydown', function (e) {
     if (e.code === 'Space' || e.key === ' ' || e.code === 'MediaPlayPause' || e.key === 'k') {
       e.preventDefault();
