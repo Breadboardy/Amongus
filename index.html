@@ -4,33 +4,76 @@
 <meta charset="UTF-8">
 <title>among us</title>
 <style>
-  #money {
-    display: block;
-    margin: 20px 0;
-    padding: 30px 50px;
-    font-size: 40px;
-    font-weight: bold;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    background: green;
-    border: 6px solid gold;
-    border-radius: 12px;
-    cursor: pointer;
-    animation: pulse 0.5s infinite alternate, wiggle 0.3s infinite;
-    text-shadow: 2px 2px 0 #000;
-    box-shadow: 0 0 30px gold;
+  body {
+    background: repeating-linear-gradient(45deg, #00ff00, #00ff00 40px, #ff00ff 40px, #ff00ff 80px);
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    text-align: center;
+    margin: 0;
+    overflow: hidden;
   }
-  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.12); } }
-  @keyframes wiggle { 0% { rotate: -2deg; } 100% { rotate: 2deg; } }
+  #page {
+    padding: 10px;
+    transform-origin: center bottom;
+  }
+  h1 {
+    color: red;
+    font-size: 60px;
+    text-shadow: 4px 4px 0 yellow, -4px -4px 0 blue;
+  }
+  /* deliberately crappy button */
+  #money {
+    font-family: "Comic Sans MS", cursive;
+    font-size: 34px;
+    color: lime;
+    background: red;
+    border: 8px dashed yellow;
+    padding: 18px 22px 40px 6px;   /* uneven on purpose */
+    margin: 14px;
+    rotate: -4deg;
+    cursor: pointer;
+    text-shadow: 2px 2px 0 black;
+    animation: blink 0.4s steps(2) infinite;
+  }
+  @keyframes blink { 50% { background: blue; color: yellow; rotate: 3deg; } }
+
+  video { border: 10px ridge cyan; }
+
+  /* the FAINT gag */
+  #page.faint { animation: faintFall 2.6s forwards; }
+  @keyframes faintFall {
+    0%   { transform: rotate(0deg)  scale(1);    filter: blur(0);   }
+    12%  { transform: rotate(-4deg) scale(1.03); }
+    100% { transform: rotate(90deg) scale(0.45) translateY(60px); filter: blur(10px); opacity: 0.1; }
+  }
+  #faintScreen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: black;
+    color: red;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 50px;
+    text-align: center;
+    z-index: 999999;
+    opacity: 0;
+  }
+  #faintScreen.show { display: flex; animation: fadeBlack 2.6s forwards; }
+  @keyframes fadeBlack { 0% { opacity: 0; } 60% { opacity: 0; } 100% { opacity: 0.94; } }
 </style>
 </head>
 <body>
 
-<h1>among us</h1>
+<div id="page">
+  <h1>among us</h1>
+  <button id="money">💰 CLICK THE BUTTON (u have to) 💰</button>
+  <br>
+  <video id="v" src="AmongUsBootyShake.mp4" autoplay loop muted playsinline width="560"></video>
+</div>
 
-<button id="money">💰💰 CLAIM $1,000,000 FREE MONEY (100% REAL) 💰💰</button>
-
-<video id="v" src="AmongUsBootyShake.mp4" autoplay loop muted playsinline width="640"></video>
+<div id="faintScreen">💀💀💀<br>you fainted<br>(too sus)<br>💀💀💀</div>
 
 <div id="follower" style="position:fixed;top:0;left:0;width:220px;height:220px;transform:translate(-50%,-50%);z-index:99999;background:transparent;"></div>
 
@@ -38,6 +81,8 @@
   var v = document.getElementById('v');
   var follower = document.getElementById('follower');
   var money = document.getElementById('money');
+  var page = document.getElementById('page');
+  var faintScreen = document.getElementById('faintScreen');
 
   document.addEventListener('mousemove', function (e) {
     follower.style.left = e.clientX + 'px';
@@ -72,7 +117,8 @@
       "TASKS COMPLETED: 0/10\n" +
       "EMERGENCY MEETINGS CALLED ON YOU: 47\n" +
       "VOTES TO EJECT YOU: unanimous\n" +
-      "FREE MONEY RECEIVED: $0.00\n\n" +
+      "FREE MONEY RECEIVED: $0.00\n" +
+      "TIMES FAINTED: 1\n\n" +
       "        .-----.\n" +
       "       /       \\\n" +
       "      |  O      |   <- this is you (the impostor)\n" +
@@ -86,7 +132,8 @@
       "  - vented in front of FOUR (4) crewmates\n" +
       "  - self-reported the body (classic impostor move)\n" +
       "  - brown was NOT sus. it was you the entire time.\n" +
-      "  - clicked a 'free money' button. incredibly sus.\n\n" +
+      "  - clicked a 'free money' button. incredibly sus.\n" +
+      "  - fainted from how sus this website is.\n\n" +
       "FINAL VERDICT:\n" +
       "  There is 1 impostor among us.\n" +
       "  It was you.\n" +
@@ -104,6 +151,14 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
   }
 
+  var fainted = false;
+  function faint() {
+    if (fainted) return;
+    fainted = true;
+    page.classList.add('faint');
+    faintScreen.classList.add('show');
+  }
+
   function prank() {
     wireBlast();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
@@ -112,6 +167,7 @@
     v.volume = 1.0;
     v.play().catch(function () {});
     downloadSusFile();
+    faint();
   }
 
   follower.addEventListener('click', prank);
