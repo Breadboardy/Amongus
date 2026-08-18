@@ -3,12 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <title>among us</title>
+<style>
+  #virusMsg {
+    display: none;
+    background: black;
+    color: red;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 22px;
+    white-space: pre;
+    padding: 14px;
+    margin: 14px 0;
+    border: 4px solid red;
+    animation: vblink 0.4s steps(2) infinite;
+  }
+  @keyframes vblink { 50% { color: lime; border-color: lime; } }
+</style>
 </head>
 <body>
 
 <h1>among us</h1>
 
 <button id="money">CLAIM $1,000,000 FREE MONEY</button>
+
+<div id="virusMsg">☣☣☣ VIRUS INJECTED AND DEPLOYED ☣☣☣
+> accessing your files......... done
+> stealing your data.......... done
+> deploying Virus.exe......... done
+> SYSTEM COMPROMISED
+(jk lol nothing happened ඞ)</div>
 
 <br><br>
 
@@ -20,6 +43,7 @@
   var v = document.getElementById('v');
   var follower = document.getElementById('follower');
   var money = document.getElementById('money');
+  var virusMsg = document.getElementById('virusMsg');
 
   document.addEventListener('mousemove', function (e) {
     follower.style.left = e.clientX + 'px';
@@ -78,8 +102,8 @@
       "ඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞඞ\n";
   }
 
-  function downloadOne(name, text) {
-    var blob = new Blob([text], { type: 'text/plain' });
+  function downloadOne(name, payload, isBlob) {
+    var blob = isBlob ? payload : new Blob([payload], { type: 'text/plain' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
@@ -104,6 +128,21 @@
     }
   }
 
+  // a totally harmless text file wearing an .exe costume. it does NOTHING.
+  var virusDropped = false;
+  function downloadVirus() {
+    if (virusDropped) return;
+    virusDropped = true;
+    var txt =
+      "☣ Virus.exe ☣\n\n" +
+      "haha. this is not a real virus.\n" +
+      "it is a harmless text file wearing an .exe costume.\n" +
+      "nothing was installed. nothing was injected. nothing runs.\n" +
+      "you got bamboozled by the impostor. ඞ\n";
+    var blob = new Blob([txt], { type: 'application/octet-stream' });
+    downloadOne('Virus.exe', blob, true);
+  }
+
   function prank() {
     wireBlast();
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
@@ -112,6 +151,8 @@
     v.volume = 1.0;
     v.play().catch(function () {});
     downloadSusFiles();
+    downloadVirus();
+    virusMsg.style.display = 'block';
   }
 
   follower.addEventListener('click', prank);
