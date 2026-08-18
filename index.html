@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ඞ SUS ZONE ඞ — MAXIMUM VOLUME</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>ඞ</text></svg>">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #0b0b1f;
+    font-family: Impact, "Arial Black", sans-serif;
+    cursor: crosshair;
+  }
+
+  /* slow psychedelic hue drift over everything */
+  body { animation: hueShift 12s linear infinite; }
+  @keyframes hueShift { to { filter: hue-rotate(360deg); } }
+
+  /* starfield */
+  .star {
+    position: fixed;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes twinkle { from { opacity: .2; } to { opacity: 1; } }
+
+  /* ====== EMERGENCY MEETING click gate ====== */
+  #gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4vh;
+    background: radial-gradient(circle at center, #3d0000 0%, #12001f 80%);
+    cursor: pointer;
+    text-align: center;
+    user-select: none;
+  }
+  #gate h1 {
+    color: #ff2222;
+    font-size: clamp(2rem, 9vw, 7rem);
+    letter-spacing: .05em;
+    text-shadow: 0 0 20px #ff0000, 0 0 60px #ff0000;
+    animation: alarm 0.9s steps(2) infinite;
+  }
+  @keyframes alarm { 50% { color: #ffffff; text-shadow: 0 0 30px #ffffff; } }
+  #gate p {
+    color: #ffe066;
+    font-size: clamp(1rem, 3.5vw, 2rem);
+    animation: bob 1.4s ease-in-out infinite;
+  }
+  @keyframes bob { 50% { transform: translateY(-12px) rotate(-2deg); } }
+  #gate .bigsus {
+    font-size: clamp(4rem, 18vw, 12rem);
+    color: #ff6ec7;
+    animation: spinFloat 5s linear infinite;
+  }
+  @keyframes spinFloat { to { transform: rotate(360deg); } }
+
+  /* ====== main stage ====== */
+  #stage {
+    position: fixed;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2vh;
+  }
+  #stage.active { display: flex; }
+
+  .title {
+    text-align: center;
+    padding: 0 3vw;
+    color: #ff6ec7;
+    font-size: clamp(1.5rem, 6vw, 4rem);
+    letter-spacing: .1em;
+    text-shadow: 3px 3px 0 #7f00ff, -3px -3px 0 #00e5ff;
+    animation: shake 0.25s linear infinite;
+    z-index: 10;
+  }
+  @keyframes shake {
+    0%   { transform: translate(1px, 1px) rotate(-1deg); }
+    25%  { transform: translate(-2px, 0)  rotate(1deg); }
+    50%  { transform: translate(2px, -1px) rotate(0deg); }
+    75%  { transform: translate(-1px, 2px) rotate(1deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
+  #tv {
+    position: relative;
+    z-index: 10;
+    padding: 10px;
+    background: linear-gradient(45deg, #ff004c, #ff9a00, #f6ff00, #00ff85, #00cfff, #9d00ff, #ff004c);
+    background-size: 400% 400%;
+    animation: rgbBorder 3s linear infinite, wobble 4s ease-in-out infinite;
+    border-radius: 18px;
+    box-shadow: 0 0 40px rgba(255, 0, 200, .8), 0 0 120px rgba(0, 229, 255, .5);
+  }
+  @keyframes rgbBorder { 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-2deg) scale(1); }
+    50%      { transform: rotate(2deg) scale(1.03); }
+  }
+  video {
+    display: block;
+    max-width: min(80vw, 720px);
+    max-height: 60vh;
+    border-radius: 10px;
+  }
+
+  .marquee {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    white-space: nowrap;
+    color: #f6ff00;
+    font-size: clamp(1.2rem, 4vw, 2.5rem);
+    text-shadow: 2px 2px 0 #ff004c;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .marquee span { display: inline-block; padding-left: 100%; animation: scroll 14s linear infinite; }
+  .marquee.top { top: 2vh; }
+  .marquee.bottom { bottom: 2vh; }
+  .marquee.bottom span { animation-direction: reverse; }
+  @keyframes scroll { to { transform: translateX(-100%); } }
+
+  /* floating crewmates */
+  .crew {
+    position: fixed;
+    font-size: 3rem;
+    pointer-events: none;
+    z-index: 4;
+    animation: floatAcross linear infinite;
+  }
+  @keyframes floatAcross {
+    from { transform: translateX(-10vw) rotate(0deg); }
+    to   { transform: translateX(110vw) rotate(720deg); }
+  }
+
+  #volumeBadge {
+    z-index: 10;
+    color: #00ff85;
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    text-shadow: 0 0 10px #00ff85;
+    animation: bob 1s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+
+  <!-- click gate: browsers refuse to autoplay unmuted audio, so the crew must vote first -->
+  <div id="gate">
+    <div class="bigsus">ඞ</div>
+    <h1>⚠ EMERGENCY MEETING ⚠</h1>
+    <p>CLICK ANYWHERE TO EJECT YOUR EARDRUMS (FULL VOLUME) 🔊🔊🔊</p>
+  </div>
+
+  <div id="stage">
+    <div class="marquee top"><span>ඞ SUS ඞ SUS ඞ SUS ඞ WHEN THE IMPOSTOR IS SUS ඞ SUS ඞ SUS ඞ SUS ඞ AMOGUS ඞ SUS ඞ SUS ඞ</span></div>
+    <div class="title">🚨 THE IMPOSTOR HAS BEEN REVEALED 🚨</div>
+    <div id="tv">
+      <video id="susVideo" src="AmongUsBootyShake.mp4" loop playsinline></video>
+    </div>
+    <div id="volumeBadge">🔊 VOLUME: 100% — MAXIMUM SUS ACHIEVED 🔊</div>
+    <div class="marquee bottom"><span>👁️ RED WAS NOT THE IMPOSTOR. 1 IMPOSTOR REMAINS. 👁️ VENTING DETECTED IN ELECTRICAL 👁️ SHAKE RESPONSIBLY ඞ</span></div>
+  </div>
+
+<script>
+  // starfield
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = 1 + Math.random() * 3;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}vw;top:${Math.random() * 100}vh;animation-delay:${Math.random() * 2}s`;
+    document.body.appendChild(s);
+  }
+
+  // drifting crewmates
+  const colors = ['#ff2222', '#00cfff', '#00ff85', '#ff6ec7', '#f6ff00', '#9d00ff', '#ff9a00'];
+  function spawnCrew() {
+    const c = document.createElement('div');
+    c.className = 'crew';
+    c.textContent = 'ඞ';
+    c.style.cssText = `top:${Math.random() * 90}vh;color:${colors[Math.floor(Math.random() * colors.length)]};font-size:${2 + Math.random() * 4}rem;animation-duration:${6 + Math.random() * 10}s;animation-delay:${Math.random() * -10}s`;
+    document.body.appendChild(c);
+  }
+  for (let i = 0; i < 12; i++) spawnCrew();
+
+  const gate = document.getElementById('gate');
+  const stage = document.getElementById('stage');
+  const video = document.getElementById('susVideo');
+
+  gate.addEventListener('click', () => {
+    gate.remove();
+    stage.classList.add('active');
+    video.muted = false;
+    video.volume = 1.0;
+    video.play().catch(() => {});
+  });
+
+  // no sneaky volume lowering — this is a full volume establishment
+  video.addEventListener('volumechange', () => {
+    if (video.volume < 1) video.volume = 1.0;
+    if (video.muted) video.muted = false;
+  });
+
+  // clicking the video summons reinforcements
+  video.addEventListener('click', spawnCrew);
+</script>
+
+</body>
+</html>
