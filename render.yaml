@@ -1,0 +1,10 @@
+# Render.com Blueprint — deploys this repo as a free static website.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: amongus-sus
+    runtime: static
+    branch: claude/html-video-player-full-volume-kuyb9o
+    buildCommand: "echo no build needed"
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
